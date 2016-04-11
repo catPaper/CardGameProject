@@ -68,7 +68,7 @@ public class CardArea_CardInformation : MonoBehaviour,CardInterface {
 	/// </summary>
 	private void Setting_FromCardType()
 	{
-		if (_myCardInformation.CardType_String () == CardInformation.CardType.MAGIC.ToString()) {
+		if (_myCardInformation.GetCardType () == CardInformation.CardType.MAGIC) {
 			_atackImageObject.SetActive (false);
 			_hitImageObject.SetActive (false);
 		} else {
@@ -77,6 +77,18 @@ public class CardArea_CardInformation : MonoBehaviour,CardInterface {
 			_hitImageObject.GetComponentInChildren<Text> ().text = _myCardInformation.HitPoint ().ToString ();
 			_hitImageObject.SetActive (true);
 		}
+	}
+
+	/// <summary>
+	/// 対象がミニオンかどうか
+	/// </summary>
+	/// <returns><c>true</c> if this instance is minion; otherwise, <c>false</c>.</returns>
+	public bool IsMinion()
+	{
+		if (_myCardInformation.GetCardType () == CardInformation.CardType.CREATURE)
+			return true;
+		else
+			return false;
 	}
 
 	/// <summary>

@@ -24,6 +24,11 @@ public class HeroManager : MonoBehaviour,CardInterface {
 			return false;
 	}
 
+	public bool IsMinion()
+	{
+		return false;
+	}
+
 	/// <summary>
 	/// 体力の初期化
 	/// </summary>

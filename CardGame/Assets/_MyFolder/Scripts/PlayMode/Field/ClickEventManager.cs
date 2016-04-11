@@ -32,55 +32,90 @@ public class ClickEventManager : MonoBehaviour {
 
 	// Update is called once per frame
 	void Update () {
-		if (_myGameManager._phase == GameManager.Phase.MAIN) {
-			if (Input.GetMouseButtonDown (0)) {
-				RaycastHit2D hit = Physics2D.Raycast (Camera.main.ScreenToWorldPoint (Input.mousePosition), Vector2.zero);
-				if (hit.collider) {
-					if (hit.collider.gameObject.name == "CardPrefab") {
-						if (CanDrag(hit.collider.gameObject))
-							DragObject_Set (hit.collider.gameObject, DragObjectType.HAND_CHARACTER);
 
-						//相手のターンに操作可能（後にAIや他プレイヤによる操作に切り替え
-						if (CanDrag(hit.collider.gameObject))
+		if (_myGameManager._phase != GameManager.Phase.MAIN) {
+			DragObject_Reset ();
+			return;
+		}
+			
+		if (Input.GetMouseButtonDown (0)) {
+			RaycastHit2D hit = Physics2D.Raycast (Camera.main.ScreenToWorldPoint (Input.mousePosition), Vector2.zero);
+			if (hit.collider) {
+				if (IsHandCard (hit.collider.gameObject)) {
+					//TODO手札のカードの識別
+					//対象がミニオンの場合
+					if (IsMinion (hit.collider.gameObject)) {
+						if (CanDrag (hit.collider.gameObject))
 							DragObject_Set (hit.collider.gameObject, DragObjectType.HAND_CHARACTER);
 					}
-					if (hit.collider.transform.FindChild ("CharaPrefab") != null) {
-						GameObject childObject = hit.collider.transform.FindChild ("CharaPrefab").gameObject;
-						if (CanDrag (hit.collider.gameObject)) {
-							if (!childObject.activeSelf) {
-								//TODO
-							}
-						}
+				}
+				if (IsFieldSpace (hit.collider.gameObject)) {
+					if (CanDrag (hit.collider.gameObject)) {
+						//TODO
 					}
 				}
 			}
+		}
 
-			if (Input.GetMouseButtonUp (0)) {
-				RaycastHit2D hit = Physics2D.Raycast (Camera.main.ScreenToWorldPoint (Input.mousePosition), Vector2.zero);
-				if (hit.collider) {
-					if (ClickStartObject != null) {
-						if (_dragObjectType == DragObjectType.HAND_CHARACTER) {
-							if (hit.collider.transform.FindChild ("CharaPrefab") != null) {
-								GameObject childObject = hit.collider.transform.FindChild ("CharaPrefab").gameObject;
-								if (CanDrag(hit.collider.gameObject)) {
-									if (!childObject.activeSelf) {
-										_myGameManager.PlayCharacterCard (ClickStartObject.GetComponent<CardArea_CardInformation> (), hit.collider.gameObject.GetComponent<BattleArea_CardInformation> ());
-									}
-								}
-								//相手のターンに操作かのう（後にAIや他プレイヤによる操作に切り替え
-								if (CanDrag(hit.collider.gameObject)) {
-									if (!childObject.activeSelf)
-										_myGameManager.PlayCharacterCard (ClickStartObject.GetComponent<CardArea_CardInformation> (), hit.collider.gameObject.GetComponent<BattleArea_CardInformation> ());
-								}
+		if (Input.GetMouseButtonUp (0)) {
+			RaycastHit2D hit = Physics2D.Raycast (Camera.main.ScreenToWorldPoint (Input.mousePosition), Vector2.zero);
+			if (hit.collider) {
+				if (ClickStartObject != null) {
+					if (_dragObjectType == DragObjectType.HAND_CHARACTER) {
+						if (IsFieldSpace (hit.collider.gameObject)) {
+							if (CanDrag (hit.collider.gameObject)) {
+								_myGameManager.PlayCharacterCard (ClickStartObject.GetComponent<CardArea_CardInformation> (), hit.collider.gameObject.GetComponent<BattleArea_CardInformation> ());
 							}
-						}
+						}	
 					}
 				}
-				DragObject_Reset ();
 			}
-		} else {
 			DragObject_Reset ();
 		}
+	
+	}
+
+	/// <summary>
+	/// 対象がフィールドの空きスペースかどうか
+	/// </summary>
+	/// <returns><c>true</c> if this instance is field space the specified targetObject; otherwise, <c>false</c>.</returns>
+	/// <param name="targetObject">Target object.</param>
+	private bool IsFieldSpace(GameObject targetObject)
+	{
+		if (targetObject.transform.FindChild ("CharaPrefab") == null)
+			return false;
+
+		GameObject childObject = targetObject.transform.FindChild ("CharaPrefab").gameObject;
+
+		if (!childObject.activeSelf)
+			return true;
+		else
+			return false;
+	}
+
+	/// <summary>
+	/// ドラッグ開始オブジェクトがハンドカードかどうか
+	/// </summary>
+	/// <returns><c>true</c> if this instance is hand card; otherwise, <c>false</c>.</returns>
+	private bool IsHandCard(GameObject dragObject)
+	{
+		if (dragObject.name == ("CardPrefab"))
+			return true;
+		else
+			return false;
+	}
+
+	/// <summary>
+	/// 対象がミニオンかどうか
+	/// </summary>
+	/// <returns><c>true</c> if this instance is minion the specified targetObject; otherwise, <c>false</c>.</returns>
+	/// <param name="targetObject">Target object.</param>
+	private bool IsMinion(GameObject targetObject)
+	{
+		if (targetObject.GetComponent<CardInterface> ().IsMinion ())
+			return true;
+		else
+			return false;
 	}
 
 	/// <summary>
