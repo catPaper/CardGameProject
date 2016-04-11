@@ -22,6 +22,7 @@ public class BattleArea_CardInformation : MonoBehaviour,CardInterface {
 	//キャラを囲うフレーム
 	private Image _charaFrame;
 
+
 	/// <summary>
 	/// 自分の所有するものか
 	/// </summary>
@@ -33,6 +34,7 @@ public class BattleArea_CardInformation : MonoBehaviour,CardInterface {
 		else 
 			return false;
 	}
+
 		
 
 	/// <summary>
@@ -50,6 +52,15 @@ public class BattleArea_CardInformation : MonoBehaviour,CardInterface {
 
 	}
 
+
+	/// <summary>
+	/// 現段階では場に出ているカードはミニオン
+	/// </summary>
+	/// <returns><c>true</c> if this instance is minion; otherwise, <c>false</c>.</returns>
+	public bool IsMinion()
+	{
+		return true;
+	}
 
 
 	/// <summary>

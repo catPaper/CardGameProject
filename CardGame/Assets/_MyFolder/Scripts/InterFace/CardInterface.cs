@@ -9,4 +9,10 @@ public interface CardInterface  {
 	/// <returns><c>true</c> if this instance is own; otherwise, <c>false</c>.</returns>
 	bool isOwn();
 
+	/// <summary>
+	/// 対象がミニオンかどうか
+	/// </summary>
+	/// <returns><c>true</c> if this instance is minion; otherwise, <c>false</c>.</returns>
+	bool IsMinion();
+
 }

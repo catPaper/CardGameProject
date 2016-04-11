@@ -123,14 +123,14 @@ public class CardInformation : MonoBehaviour {
 		return _playImage;
 	}
 
-	public string HeroType_String()
+	public HeroType GetHeroType()
 	{
-		return _heroType.ToString();
+		return _heroType;
 	}
 
-	public string CardType_String()
+	public CardType GetCardType()
 	{
-		return _cardType.ToString();
+		return _cardType;
 	}
 
 	public string CardExplain()
