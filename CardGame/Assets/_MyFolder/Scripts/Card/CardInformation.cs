@@ -162,5 +162,13 @@ public class CardInformation : MonoBehaviour {
 			return heroColor.PRIEST;
 		}
 	}
-		
+
+	/// <summary>
+	/// ダメージをうける
+	/// </summary>
+	/// <param name="amount">Amount.</param>
+	public void Damage(int amount)
+	{
+		_hitPoint = Mathf.Max (0, _hitPoint - amount);
+	}
 }

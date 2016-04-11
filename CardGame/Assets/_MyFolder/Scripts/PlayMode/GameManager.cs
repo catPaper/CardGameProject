@@ -73,6 +73,12 @@ public class GameManager : MonoBehaviour {
 		switch (_phase) {
 		case Phase.CHECK:
 			//TODO モンスター等の効果発揮Phase
+			//ミニオンを攻撃可能状態にする
+			if (_turn == Turn.MY) {
+				AtackPossibleProcess (_myPlayerInformation);
+			} else {
+				AtackPossibleProcess (_enemyPlayerInformation);
+			}
 			_phase = Phase.MANA_RELOAD;
 			break;
 		case Phase.MANA_RELOAD:
@@ -99,6 +105,37 @@ public class GameManager : MonoBehaviour {
 			ChangeTurn();
 			break;
 		}
+	}
+
+	/// <summary>
+	/// 敵のミニオンにミニオンで攻撃する
+	/// </summary>
+	/// <param name="_myMinionInfo">My minion info.</param>
+	/// <param name="_enemyMinionInfo">Enemy minion info.</param>
+	public void AtackToEnemyMinion(BattleArea_CardInformation _myMinionInfo,BattleArea_CardInformation _enemyMinionInfo)
+	{
+		_myMinionInfo.Damage (_enemyMinionInfo.MyAtackPower ());
+		_enemyMinionInfo.Damage (_myMinionInfo.MyAtackPower ());
+	}
+
+	/// <summary>
+	/// 敵のヒーローにミニオンで攻撃する処理
+	/// </summary>
+	/// <param name="enemyHeroManager">Enemy hero manager.</param>
+	/// <param name="atackMinionInformation">Atack minion information.</param>
+	public void AtackToEnemyHero(HeroManager enemyHeroManager,BattleArea_CardInformation atackMinionInformation)
+	{
+		enemyHeroManager.Damage(atackMinionInformation.MyAtackPower());
+		atackMinionInformation.AtackFinish ();
+	}
+
+	/// <summary>
+	/// ミニオンを攻撃できる状態にする
+	/// </summary>
+	/// <param name="_targetInformation">Target information.</param>
+	private void AtackPossibleProcess(PlayerInformation _targetInformation)
+	{
+		_targetInformation.AllMinionAtackReflesh ();
 	}
 
 	/// <summary>

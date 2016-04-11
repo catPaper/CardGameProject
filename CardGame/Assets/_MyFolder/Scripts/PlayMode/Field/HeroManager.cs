@@ -38,16 +38,21 @@ public class HeroManager : MonoBehaviour,CardInterface {
 		_myToughnessText.text = _myToughness.ToString();
 	}
 
+	public void Damage(int number)
+	{
+		_myToughness = Mathf.Max (_myToughness - number, 0);
+		_myToughnessText.text = _myToughness.ToString();
+		if (_myToughness == 0) {
+			DeadProcess ();
+		}
+	}
+
 	/// <summary>
 	/// 体力を1減らす
 	/// </summary>
 	public void DecreaseToughness()
 	{
-		_myToughness = Mathf.Max (_myToughness - 1, 0);
-		_myToughnessText.text = _myToughness.ToString();
-		if (_myToughness == 0) {
-			DeadProcess ();
-		}
+		Damage (1);
 	}
 
 	/// <summary>

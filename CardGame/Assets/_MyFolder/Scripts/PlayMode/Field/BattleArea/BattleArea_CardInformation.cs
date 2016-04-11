@@ -19,6 +19,8 @@ public class BattleArea_CardInformation : MonoBehaviour,CardInterface {
 
 	private CardInformation _myCardInformation;
 
+	private bool _canAtack;	//攻撃可能状態かどうか
+
 	//キャラを囲うフレーム
 	private Image _charaFrame;
 
@@ -43,13 +45,32 @@ public class BattleArea_CardInformation : MonoBehaviour,CardInterface {
 	/// <param name="_targetCardInformation">Target card information.</param>
 	public void SetTheCard(CardInformation _targetCardInformation)
 	{
-		_myCardInformation = _targetCardInformation;
+	//;
+		_myCardInformation = CardInformation.Instantiate(_targetCardInformation);
 
+		UpdateCardInfo ();
+		_charaPrefab.SetActive (true);
+		_canAtack = false;
+
+	}
+
+	/// <summary>
+	/// カード情報を更新する
+	/// </summary>
+	public void UpdateCardInfo()
+	{
 		_atackPointText.text = _myCardInformation.AtackPoint ().ToString();
 		_hitPointText.text = _myCardInformation.HitPoint ().ToString();
 		_charaImage.sprite = _myCardInformation.PlayImage ();
-		_charaPrefab.SetActive (true);
+	}
 
+	/// <summary>
+	/// ダメージを受ける
+	/// </summary>
+	public void Damage(int amount)
+	{
+		_myCardInformation.Damage (amount);
+		UpdateCardInfo();
 	}
 
 
@@ -62,6 +83,14 @@ public class BattleArea_CardInformation : MonoBehaviour,CardInterface {
 		return true;
 	}
 
+	/// <summary>
+	/// ミニオンの破壊処理
+	/// </summary>
+	public void DeadProcess()
+	{
+		Destroy (_myCardInformation.gameObject);
+		DeactiveCharaPrefab ();
+	}
 
 	/// <summary>
 	/// キャラプレファブを非表示にする
@@ -74,5 +103,56 @@ public class BattleArea_CardInformation : MonoBehaviour,CardInterface {
 	void Awake()
 	{
 		_charaFrame = GetComponent<Image> ();
+	}
+
+	/// <summary>
+	/// 攻撃をできるようにする
+	/// </summary>
+	public void AtackReflesh()
+	{
+		_canAtack = true;
+	}
+
+	/// <summary>
+	/// 攻撃を完了させる
+	/// </summary>
+	public void AtackFinish()
+	{
+		_canAtack = false;
+	}
+
+	/// <summary>
+	/// このミニオンが攻撃可能かどうかチェック
+	/// </summary>
+	/// <returns><c>true</c>, if check was atacked, <c>false</c> otherwise.</returns>
+	public bool AtackCheck()
+	{
+		if (_myCardInformation.AtackPoint() <= 0)
+			return false;
+
+		//TODO 効果等で攻撃できない場合参照して記述
+
+		if (_canAtack)
+			return true;
+		else
+			return false;
+	}
+
+	/// <summary>
+	/// 攻撃力
+	/// </summary>
+	/// <returns>The atack power.</returns>
+	public int MyAtackPower()
+	{
+		return _myCardInformation.AtackPoint();
+	}
+
+	/// <summary>
+	/// 体力
+	/// </summary>
+	/// <returns>The health.</returns>
+	public int MyHealth()
+	{
+		return _myCardInformation.HitPoint ();
 	}
 }

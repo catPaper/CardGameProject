@@ -74,6 +74,14 @@ public class PlayerInformation : MonoBehaviour {
 
 	}
 
+	/// <summary>
+	/// 自陣の攻撃できるミニオンを攻撃可能にする
+	/// </summary>
+	public void AllMinionAtackReflesh()
+	{
+		_myBattleAreaManager.AllMinionAtackReflesh ();
+	}
+
 	public void GetCoin(CardInformation coinInformation)
 	{
 		_myCardAreaManager.GetCard (coinInformation);

@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using System.Collections;
+using System.Collections.Generic;
 
 public class ClickEventManager : MonoBehaviour {
 
@@ -49,9 +50,11 @@ public class ClickEventManager : MonoBehaviour {
 							DragObject_Set (hit.collider.gameObject, DragObjectType.HAND_CHARACTER);
 					}
 				}
-				if (IsFieldSpace (hit.collider.gameObject)) {
+				if (IsFieldMinion (hit.collider.gameObject)) {
 					if (CanDrag (hit.collider.gameObject)) {
-						//TODO
+						BattleArea_CardInformation dragMinionInfo = hit.collider.gameObject.GetComponent<BattleArea_CardInformation> ();
+						if(dragMinionInfo.AtackCheck())
+							DragObject_Set (hit.collider.gameObject, DragObjectType.FIELD_CHARACTER);
 					}
 				}
 			}
@@ -61,6 +64,7 @@ public class ClickEventManager : MonoBehaviour {
 			RaycastHit2D hit = Physics2D.Raycast (Camera.main.ScreenToWorldPoint (Input.mousePosition), Vector2.zero);
 			if (hit.collider) {
 				if (ClickStartObject != null) {
+					//手札のカードをドラッグしてきた
 					if (_dragObjectType == DragObjectType.HAND_CHARACTER) {
 						if (IsFieldSpace (hit.collider.gameObject)) {
 							if (CanDrag (hit.collider.gameObject)) {
@@ -68,11 +72,33 @@ public class ClickEventManager : MonoBehaviour {
 							}
 						}	
 					}
+					if (_dragObjectType == DragObjectType.FIELD_CHARACTER) {
+						//TODO 敵のキャラクターや挑発持ちへの対処
+						if (IsFieldMinion (hit.collider.gameObject) && !CanDrag (hit.collider.gameObject)) {
+							_myGameManager.AtackToEnemyMinion (ClickStartObject.GetComponent<BattleArea_CardInformation>(), hit.collider.gameObject.GetComponent<BattleArea_CardInformation>());
+						}
+						if (IsEnemyHero (hit.collider.gameObject)) {
+							_myGameManager.AtackToEnemyHero (hit.collider.gameObject.GetComponent<HeroManager> (), ClickStartObject.GetComponent<BattleArea_CardInformation> ());
+						}
+					}
 				}
 			}
 			DragObject_Reset ();
 		}
 	
+	}
+
+	/// <summary>
+	/// 敵のヒーロかどうか
+	/// </summary>
+	/// <returns><c>true</c> if this instance is enemy hero; otherwise, <c>false</c>.</returns>
+	private bool IsEnemyHero(GameObject targetObject)
+	{
+		if (targetObject.name == "HeroInfo" && !CanDrag (targetObject)) {
+			return true;
+		} else {
+			return false;
+		}
 	}
 
 	/// <summary>
@@ -91,6 +117,24 @@ public class ClickEventManager : MonoBehaviour {
 			return true;
 		else
 			return false;
+	}
+
+	/// <summary>
+	/// 対象がフィールドのミニオンかどうか
+	/// </summary>
+	/// <returns><c>true</c> if this instance is field minion the specified targetObject; otherwise, <c>false</c>.</returns>
+	/// <param name="targetObject">Target object.</param>
+	private bool IsFieldMinion(GameObject targetObject)
+	{
+		if (targetObject.transform.FindChild ("CharaPrefab") == null)
+			return false;
+
+		GameObject childObject = targetObject.transform.FindChild ("CharaPrefab").gameObject;
+
+		if (!childObject.activeSelf)
+			return false;
+		else
+			return true;
 	}
 
 	/// <summary>
