@@ -4,7 +4,7 @@ using UnityEngine.UI;
 
 [RequireComponent(typeof(Image))]
 
-public class BattleArea_CardInformation : MonoBehaviour {
+public class BattleArea_CardInformation : MonoBehaviour,CardInterface {
 
 	[SerializeField][Header("キャラプレファブ")]
 	private GameObject _charaPrefab;

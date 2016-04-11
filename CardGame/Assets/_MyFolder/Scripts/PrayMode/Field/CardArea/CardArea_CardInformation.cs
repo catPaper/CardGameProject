@@ -5,7 +5,7 @@ using UnityEngine.UI;
 /// <summary>
 /// カードAreaに属するカード情報を管理する
 /// </summary>
-public class CardArea_CardInformation : MonoBehaviour {
+public class CardArea_CardInformation : MonoBehaviour,CardInterface {
 
 	[SerializeField][Header("カード裏面")]
 	private GameObject _cardBack;

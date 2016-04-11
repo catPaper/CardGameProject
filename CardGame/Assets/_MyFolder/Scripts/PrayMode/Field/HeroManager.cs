@@ -5,7 +5,7 @@ using UnityEngine.UI;
 /// <summary>
 /// ヒーロの体力等の管理
 /// </summary>
-public class HeroManager : MonoBehaviour {
+public class HeroManager : MonoBehaviour,CardInterface {
 
 	[SerializeField]
 	private Text _myToughnessText;
