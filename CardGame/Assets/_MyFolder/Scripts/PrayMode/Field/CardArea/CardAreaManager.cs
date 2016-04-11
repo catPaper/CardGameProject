@@ -54,7 +54,7 @@ public class CardAreaManager : MonoBehaviour {
 		GameObject tmpObject;
 		if (activeHandCards == 0)
 			return;
-		for (int i = 0; i <= activeHandCards; i++) {
+		for (int i = 0; i < activeHandCards; i++) {
 			if (!_handCardFolder [i].activeSelf) {
 				tmpObject = _handCardFolder [i];
 				_handCardFolder [i] = _handCardFolder [i + 1];
