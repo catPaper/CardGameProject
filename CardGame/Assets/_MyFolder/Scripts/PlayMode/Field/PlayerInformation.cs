@@ -74,6 +74,11 @@ public class PlayerInformation : MonoBehaviour {
 
 	}
 
+	public bool SearchSkill(SkillInformation.SkillType _skillName)
+	{
+		return _myBattleAreaManager.SearchSkill (_skillName);
+	}
+
 	/// <summary>
 	/// 自陣の攻撃できるミニオンを攻撃可能にする
 	/// </summary>

@@ -69,4 +69,22 @@ public class BattleAreaManager : MonoBehaviour {
 	{
 		AliveCheck ();
 	}
+
+	/// <summary>
+	///指定したスキルを所持しているか
+	/// </summary>
+	/// <returns><c>true</c>, if skill was searched, <c>false</c> otherwise.</returns>
+	/// <param name="_skillName">Skill name.</param>
+
+	public bool SearchSkill(SkillInformation.SkillType _skillName)
+	{
+		for (int i = 0; i < 7; i++) {
+			if (_myBattleArea_CardInformation [i].gameObject.transform.FindChild ("CharaPrefab").gameObject.activeSelf) {
+				if (_myBattleArea_CardInformation [i].SearchSkill (_skillName))
+					return true;
+			}
+		}
+
+		return false;
+	}
 }

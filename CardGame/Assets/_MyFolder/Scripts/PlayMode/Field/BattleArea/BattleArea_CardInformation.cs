@@ -139,6 +139,20 @@ public class BattleArea_CardInformation : MonoBehaviour,CardInterface {
 	}
 
 	/// <summary>
+	/// 指定したスキルを所持しているか
+	/// </summary>
+	/// <returns><c>true</c>, if skill was searched, <c>false</c> otherwise.</returns>
+	/// <param name="_skillName">Skill name.</param>
+	public bool SearchSkill(SkillInformation.SkillType _skillName)
+	{
+		foreach (SkillInformation.SkillType _haveSkill in _myCardInformation._mySkillList) {
+			if (_haveSkill == _skillName)
+				return true;
+		}
+		return false;
+	}
+
+	/// <summary>
 	/// 攻撃力
 	/// </summary>
 	/// <returns>The atack power.</returns>

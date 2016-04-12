@@ -108,23 +108,50 @@ public class GameManager : MonoBehaviour {
 	}
 
 	/// <summary>
-	/// 敵のミニオンにミニオンで攻撃する
+	/// 敵のミニオンにミニオンで攻撃する(攻撃できない場合はできない処理を実装
 	/// </summary>
 	/// <param name="_myMinionInfo">My minion info.</param>
 	/// <param name="_enemyMinionInfo">Enemy minion info.</param>
 	public void AtackToEnemyMinion(BattleArea_CardInformation _myMinionInfo,BattleArea_CardInformation _enemyMinionInfo)
 	{
+		//挑発持ちでない場合
+		if (!_enemyMinionInfo.SearchSkill (SkillInformation.SkillType.TAUNT)) {
+			if (_turn == Turn.MY) {
+				if (_enemyPlayerInformation.SearchSkill (SkillInformation.SkillType.TAUNT)) {
+					//TODO 	挑発持ちがいて攻撃できないログをだす
+					return;
+				}
+			} else {
+				if (_myPlayerInformation.SearchSkill (SkillInformation.SkillType.TAUNT)) {
+					//TODO 	挑発持ちがいて攻撃できないログをだす
+					return;
+				}
+			}
+		}
+
 		_myMinionInfo.Damage (_enemyMinionInfo.MyAtackPower ());
 		_enemyMinionInfo.Damage (_myMinionInfo.MyAtackPower ());
 	}
 
 	/// <summary>
-	/// 敵のヒーローにミニオンで攻撃する処理
+	/// 敵のヒーローにミニオンで攻撃する処理（攻撃できない場合はできない処理を実装
 	/// </summary>
 	/// <param name="enemyHeroManager">Enemy hero manager.</param>
 	/// <param name="atackMinionInformation">Atack minion information.</param>
 	public void AtackToEnemyHero(HeroManager enemyHeroManager,BattleArea_CardInformation atackMinionInformation)
 	{
+		if (_turn == Turn.MY) {
+			if(_enemyPlayerInformation.SearchSkill(SkillInformation.SkillType.TAUNT)){
+				//TODO 	挑発持ちがいて攻撃できないログをだす
+				return;
+			}
+		} else {
+			if (_myPlayerInformation.SearchSkill (SkillInformation.SkillType.TAUNT)) {
+				//TODO 	挑発持ちがいて攻撃できないログをだす
+				return;
+			}
+		}
+
 		enemyHeroManager.Damage(atackMinionInformation.MyAtackPower());
 		atackMinionInformation.AtackFinish ();
 	}

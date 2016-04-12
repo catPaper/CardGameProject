@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 using UnityEngine.UI;
-
+using System.Collections.Generic;
 
 
 /// <summary>
@@ -26,6 +26,9 @@ public class CardInformation : MonoBehaviour {
 	private Sprite _playImage;
 	[SerializeField][Header("カード説明")][Multiline]
 	private string _cardExplain;
+
+	[Header("能力リスト")]
+	public List<SkillInformation.SkillType> _mySkillList;
 
 	public enum CardType{
 		CREATURE,

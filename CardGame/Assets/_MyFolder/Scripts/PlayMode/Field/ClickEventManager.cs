@@ -73,7 +73,6 @@ public class ClickEventManager : MonoBehaviour {
 						}	
 					}
 					if (_dragObjectType == DragObjectType.FIELD_CHARACTER) {
-						//TODO 敵のキャラクターや挑発持ちへの対処
 						if (IsFieldMinion (hit.collider.gameObject) && !CanDrag (hit.collider.gameObject)) {
 							_myGameManager.AtackToEnemyMinion (ClickStartObject.GetComponent<BattleArea_CardInformation>(), hit.collider.gameObject.GetComponent<BattleArea_CardInformation>());
 						}
