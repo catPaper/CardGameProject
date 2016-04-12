@@ -85,7 +85,7 @@ public class ManaManager : MonoBehaviour {
 	public bool isUseMana(int amount)
 	{
 		if (amount > _myRestMana) {
-			PopUpCanUseMana ();
+			_logTextManager.PopUpCanUseMana ();
 			return false;
 		}
 		else
@@ -105,8 +105,5 @@ public class ManaManager : MonoBehaviour {
 		_manaText.text = _myRestMana + "/" + _myMana;
 	}
 
-	private void PopUpCanUseMana()
-	{
-		_logTextManager.PopUpLog ("マナが足りないぞ");
-	}
+
 }

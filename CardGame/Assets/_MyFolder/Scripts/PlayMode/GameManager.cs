@@ -102,7 +102,7 @@ public class GameManager : MonoBehaviour {
 			} else {
 				DrawProcess (_enemyPlayerInformation);
 			}
-			PopUpStartTurnMessage ();
+			_logTextManager.PopUpStartTurnMessage (_turn);
 			_phase = Phase.MAIN;
 			break;
 		case Phase.MAIN:
@@ -126,12 +126,12 @@ public class GameManager : MonoBehaviour {
 		if (!_enemyMinionInfo.SearchSkill (SkillInformation.SkillType.TAUNT)) {
 			if (_turn == Turn.MY) {
 				if (_enemyPlayerInformation.SearchSkill (SkillInformation.SkillType.TAUNT)) {
-					PopUpCantAtack_EnemyHasTaunt ();
+					_logTextManager.PopUpCantAtack_EnemyHasTaunt ();
 					return;
 				}
 			} else {
 				if (_myPlayerInformation.SearchSkill (SkillInformation.SkillType.TAUNT)) {
-					PopUpCantAtack_EnemyHasTaunt ();
+					_logTextManager.PopUpCantAtack_EnemyHasTaunt ();
 					return;
 				}
 			}
@@ -139,6 +139,7 @@ public class GameManager : MonoBehaviour {
 
 		_myMinionInfo.Damage (_enemyMinionInfo.MyAtackPower ());
 		_enemyMinionInfo.Damage (_myMinionInfo.MyAtackPower ());
+		_myMinionInfo.AtackFinish ();
 	}
 
 	/// <summary>
@@ -150,12 +151,12 @@ public class GameManager : MonoBehaviour {
 	{
 		if (_turn == Turn.MY) {
 			if(_enemyPlayerInformation.SearchSkill(SkillInformation.SkillType.TAUNT)){
-				PopUpCantAtack_EnemyHasTaunt ();
+				_logTextManager.PopUpCantAtack_EnemyHasTaunt ();
 				return;
 			}
 		} else {
 			if (_myPlayerInformation.SearchSkill (SkillInformation.SkillType.TAUNT)) {
-				PopUpCantAtack_EnemyHasTaunt ();
+				_logTextManager.PopUpCantAtack_EnemyHasTaunt ();
 				return;
 			}
 		}
@@ -218,32 +219,9 @@ public class GameManager : MonoBehaviour {
 		}
 	}
 
-	/// <summary>
-	/// 相手に挑発持ちがいるため攻撃できない
-	/// </summary>
-	private void PopUpCantAtack_EnemyHasTaunt()
-	{
-		_logTextManager.PopUpLog ("相手に挑発持ちがいるぞ");
-	}
-
-	/// <summary>
-	/// ターン開始のMessageを表示
-	/// </summary>
-	private void PopUpStartTurnMessage()
-	{
-
-		if (_turn == Turn.MY)
-			_logTextManager.PopUpLog ("あなたのターンだ");
-		else
-			_logTextManager.PopUpLog ("相手のターンだ");
-	}
-
-	/// <summary>
-	/// ミニオンが召喚酔い、攻撃済みで攻撃できない
-	/// </summary>
 	public void PopUpCantAtack_PlayThisTurn()
 	{
-		_logTextManager.PopUpLog ("そのミニオンはこのターン攻撃できないぞ");
+		_logTextManager.PopUpCantAtack_PlayThisTurn ();
 	}
 
 	/// <summary>

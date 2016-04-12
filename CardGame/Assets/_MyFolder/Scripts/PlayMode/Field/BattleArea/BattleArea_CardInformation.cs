@@ -14,8 +14,11 @@ public class BattleArea_CardInformation : MonoBehaviour,CardInterface {
 	private Text _atackPointText;
 	[SerializeField][Header("体力")]
 	private Text _hitPointText;
-	[SerializeField][Header("スキルイメージ")]
+	[Header("スキルイメージ")]
+	[SerializeField]
 	private Image TauntImage;
+	[SerializeField]
+	private Image DivineSheildImage;
 	[SerializeField][Header("どちらの物か")]
 	private GameManager.Who _who;
 
@@ -61,6 +64,7 @@ public class BattleArea_CardInformation : MonoBehaviour,CardInterface {
 		_atackPointText.text = _myCardInformation.AtackPoint ().ToString();
 		_hitPointText.text = _myCardInformation.HitPoint ().ToString();
 		_charaImage.sprite = _myCardInformation.PlayImage ();
+		Deactive_AllSkillImage ();
 		Set_SkillImage ();
 	}
 
@@ -70,6 +74,7 @@ public class BattleArea_CardInformation : MonoBehaviour,CardInterface {
 	private void Deactive_AllSkillImage()
 	{
 		TauntImage.enabled = false;
+		DivineSheildImage.enabled = false;
 		//ここにどんどん追加
 	}
 
@@ -81,6 +86,8 @@ public class BattleArea_CardInformation : MonoBehaviour,CardInterface {
 		//挑発イメージをセット
 		if (SearchSkill (SkillInformation.SkillType.TAUNT))
 			TauntImage.enabled = true;
+		if (SearchSkill (SkillInformation.SkillType.DIVINESHIELD))
+			DivineSheildImage.enabled = true;
 		//ここにどんどん追加
 	}
 
@@ -163,11 +170,7 @@ public class BattleArea_CardInformation : MonoBehaviour,CardInterface {
 	/// <param name="_skillName">Skill name.</param>
 	public bool SearchSkill(SkillInformation.SkillType _skillName)
 	{
-		foreach (SkillInformation.SkillType _haveSkill in _myCardInformation._mySkillList) {
-			if (_haveSkill == _skillName)
-				return true;
-		}
-		return false;
+		return _myCardInformation.SearchSkill (_skillName);
 	}
 
 	/// <summary>

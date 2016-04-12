@@ -167,11 +167,42 @@ public class CardInformation : MonoBehaviour {
 	}
 
 	/// <summary>
-	/// ダメージをうける
+	/// 指定したスキルを所持しているか
+	/// </summary>
+	/// <returns><c>true</c>, if skill was searched, <c>false</c> otherwise.</returns>
+	/// <param name="_skillName">Skill name.</param>
+	public bool SearchSkill(SkillInformation.SkillType _skillName)
+	{
+		foreach (SkillInformation.SkillType _haveSkill in _mySkillList) {
+			if (_haveSkill == _skillName)
+				return true;
+		}
+		return false;
+	}
+
+	/// <summary>
+	/// 指定の能力を削除する
+	/// </summary>
+	/// <param name="_skillName">Skill name.</param>
+	public void DeleteSkill(SkillInformation.SkillType _skillName)
+	{
+		_mySkillList.Remove (_skillName);
+	}
+
+	/// <summary>
+	/// ダメージをうける(聖なる盾があった場合ダメージを受けずに外れる
 	/// </summary>
 	/// <param name="amount">Amount.</param>
 	public void Damage(int amount)
 	{
+		if (amount <= 0)
+			return;
+
+		if (SearchSkill (SkillInformation.SkillType.DIVINESHIELD)) {
+			DeleteSkill (SkillInformation.SkillType.DIVINESHIELD);
+			return;
+		}
+			
 		_hitPoint = Mathf.Max (0, _hitPoint - amount);
 	}
 }
