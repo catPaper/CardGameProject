@@ -52,7 +52,11 @@ public class BattleArea_CardInformation : MonoBehaviour,CardInterface {
 
 		UpdateCardInfo ();
 		_charaPrefab.SetActive (true);
-		_canAtack = false;
+
+		if(SearchSkill(SkillInformation.SkillType.CHARGE))
+			_canAtack = true;
+		else
+			_canAtack = false;
 
 	}
 
