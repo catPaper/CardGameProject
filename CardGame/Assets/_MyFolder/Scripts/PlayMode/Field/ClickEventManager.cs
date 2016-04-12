@@ -53,8 +53,10 @@ public class ClickEventManager : MonoBehaviour {
 				if (IsFieldMinion (hit.collider.gameObject)) {
 					if (CanDrag (hit.collider.gameObject)) {
 						BattleArea_CardInformation dragMinionInfo = hit.collider.gameObject.GetComponent<BattleArea_CardInformation> ();
-						if(dragMinionInfo.AtackCheck())
+						if (dragMinionInfo.AtackCheck ())
 							DragObject_Set (hit.collider.gameObject, DragObjectType.FIELD_CHARACTER);
+						else
+							_myGameManager.PopUpCantAtack_PlayThisTurn ();
 					}
 				}
 			}

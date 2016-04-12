@@ -19,6 +19,8 @@ public class GameManager : MonoBehaviour {
 	[SerializeField]
 	private DeckInformation _useDeck;
 
+	private LogTextManager _logTextManager;
+
 	public enum Who{
 		MY,
 		ENEMY
@@ -39,6 +41,11 @@ public class GameManager : MonoBehaviour {
 
 	public Phase _phase = new Phase ();
 	public Turn _turn = new Turn ();
+
+	void Awake()
+	{
+		_logTextManager = GameObject.FindGameObjectWithTag ("LogText").GetComponent<LogTextManager>();
+	}
 
 	// Use this for initialization
 	void Start () {
@@ -95,6 +102,7 @@ public class GameManager : MonoBehaviour {
 			} else {
 				DrawProcess (_enemyPlayerInformation);
 			}
+			PopUpStartTurnMessage ();
 			_phase = Phase.MAIN;
 			break;
 		case Phase.MAIN:
@@ -118,12 +126,12 @@ public class GameManager : MonoBehaviour {
 		if (!_enemyMinionInfo.SearchSkill (SkillInformation.SkillType.TAUNT)) {
 			if (_turn == Turn.MY) {
 				if (_enemyPlayerInformation.SearchSkill (SkillInformation.SkillType.TAUNT)) {
-					//TODO 	挑発持ちがいて攻撃できないログをだす
+					PopUpCantAtack_EnemyHasTaunt ();
 					return;
 				}
 			} else {
 				if (_myPlayerInformation.SearchSkill (SkillInformation.SkillType.TAUNT)) {
-					//TODO 	挑発持ちがいて攻撃できないログをだす
+					PopUpCantAtack_EnemyHasTaunt ();
 					return;
 				}
 			}
@@ -142,12 +150,12 @@ public class GameManager : MonoBehaviour {
 	{
 		if (_turn == Turn.MY) {
 			if(_enemyPlayerInformation.SearchSkill(SkillInformation.SkillType.TAUNT)){
-				//TODO 	挑発持ちがいて攻撃できないログをだす
+				PopUpCantAtack_EnemyHasTaunt ();
 				return;
 			}
 		} else {
 			if (_myPlayerInformation.SearchSkill (SkillInformation.SkillType.TAUNT)) {
-				//TODO 	挑発持ちがいて攻撃できないログをだす
+				PopUpCantAtack_EnemyHasTaunt ();
 				return;
 			}
 		}
@@ -208,6 +216,34 @@ public class GameManager : MonoBehaviour {
 		} else {
 			_enemyPlayerInformation.PlayCharacterCard (_handTargetInfo, _fieldTargetInfo);
 		}
+	}
+
+	/// <summary>
+	/// 相手に挑発持ちがいるため攻撃できない
+	/// </summary>
+	private void PopUpCantAtack_EnemyHasTaunt()
+	{
+		_logTextManager.PopUpLog ("相手に挑発持ちがいるぞ");
+	}
+
+	/// <summary>
+	/// ターン開始のMessageを表示
+	/// </summary>
+	private void PopUpStartTurnMessage()
+	{
+
+		if (_turn == Turn.MY)
+			_logTextManager.PopUpLog ("あなたのターンだ");
+		else
+			_logTextManager.PopUpLog ("相手のターンだ");
+	}
+
+	/// <summary>
+	/// ミニオンが召喚酔い、攻撃済みで攻撃できない
+	/// </summary>
+	public void PopUpCantAtack_PlayThisTurn()
+	{
+		_logTextManager.PopUpLog ("そのミニオンはこのターン攻撃できないぞ");
 	}
 
 	/// <summary>

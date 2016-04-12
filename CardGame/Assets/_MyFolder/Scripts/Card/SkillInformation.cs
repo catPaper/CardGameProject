@@ -31,7 +31,9 @@ public class SkillInformation : MonoBehaviour {
         DISCOVER,       // 発見
         FATIGUE,        // 疲労
         FREEZE,         // 凍結
-        MEGAWINDFURY    // メガ・ウィンドフューリー
+        MEGAWINDFURY,   // メガ・ウィンドフューリー
+		//**********ここに追加*****************//
+		UNKNOWN			//これが最後になるように調節
     }
 
     public void Immune()

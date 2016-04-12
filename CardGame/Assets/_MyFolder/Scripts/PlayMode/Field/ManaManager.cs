@@ -7,6 +7,8 @@ public class ManaManager : MonoBehaviour {
 	[SerializeField][Header("マナテキスト")]
 	private Text _manaText;
 
+	private LogTextManager _logTextManager;
+
 	//現在溜まっているマナ数
 	private int _myMana;
 	//このターンの残りマナ数
@@ -14,6 +16,7 @@ public class ManaManager : MonoBehaviour {
 
 	void Awake()
 	{
+		_logTextManager = GameObject.FindGameObjectWithTag ("LogText").GetComponent<LogTextManager> ();
 		_myMana = 0;
 		_myRestMana = 0;
 		UpdateManaText ();
@@ -81,8 +84,10 @@ public class ManaManager : MonoBehaviour {
 	/// <param name="amount">Amount.</param>
 	public bool isUseMana(int amount)
 	{
-		if (amount > _myRestMana)
+		if (amount > _myRestMana) {
+			PopUpCanUseMana ();
 			return false;
+		}
 		else
 			return true;
 	}
@@ -98,5 +103,10 @@ public class ManaManager : MonoBehaviour {
 	private void UpdateManaText()
 	{
 		_manaText.text = _myRestMana + "/" + _myMana;
+	}
+
+	private void PopUpCanUseMana()
+	{
+		_logTextManager.PopUpLog ("マナが足りないぞ");
 	}
 }

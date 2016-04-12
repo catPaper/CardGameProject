@@ -14,6 +14,8 @@ public class BattleArea_CardInformation : MonoBehaviour,CardInterface {
 	private Text _atackPointText;
 	[SerializeField][Header("体力")]
 	private Text _hitPointText;
+	[SerializeField][Header("スキルイメージ")]
+	private Image TauntImage;
 	[SerializeField][Header("どちらの物か")]
 	private GameManager.Who _who;
 
@@ -31,10 +33,7 @@ public class BattleArea_CardInformation : MonoBehaviour,CardInterface {
 	/// <returns><c>true</c>, if own was ised, <c>false</c> otherwise.</returns>
 	public bool isOwn()
 	{
-		if (_who == GameManager.Who.MY)
-			return true;
-		else 
-			return false;
+		return (_who == GameManager.Who.MY);
 	}
 
 		
@@ -62,6 +61,27 @@ public class BattleArea_CardInformation : MonoBehaviour,CardInterface {
 		_atackPointText.text = _myCardInformation.AtackPoint ().ToString();
 		_hitPointText.text = _myCardInformation.HitPoint ().ToString();
 		_charaImage.sprite = _myCardInformation.PlayImage ();
+		Set_SkillImage ();
+	}
+
+	/// <summary>
+	/// すべてのスキルイメージを非表示にする
+	/// </summary>
+	private void Deactive_AllSkillImage()
+	{
+		TauntImage.enabled = false;
+		//ここにどんどん追加
+	}
+
+	/// <summary>
+	/// スキルイメージをカードインフォーメーションをもとに表示する
+	/// </summary>
+	private void Set_SkillImage()
+	{
+		//挑発イメージをセット
+		if (SearchSkill (SkillInformation.SkillType.TAUNT))
+			TauntImage.enabled = true;
+		//ここにどんどん追加
 	}
 
 	/// <summary>
@@ -97,6 +117,7 @@ public class BattleArea_CardInformation : MonoBehaviour,CardInterface {
 	/// </summary>
 	public void DeactiveCharaPrefab()
 	{
+		Deactive_AllSkillImage ();
 		_charaPrefab.SetActive (false);
 	}
 
@@ -132,10 +153,7 @@ public class BattleArea_CardInformation : MonoBehaviour,CardInterface {
 
 		//TODO 効果等で攻撃できない場合参照して記述
 
-		if (_canAtack)
-			return true;
-		else
-			return false;
+		return _canAtack;
 	}
 
 	/// <summary>
