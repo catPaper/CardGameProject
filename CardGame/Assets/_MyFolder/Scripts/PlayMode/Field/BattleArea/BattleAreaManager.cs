@@ -32,12 +32,23 @@ public class BattleAreaManager : MonoBehaviour {
 	}
 
 	/// <summary>
+	/// ターン終了時等、自陣のミニオンの攻撃可能状態を終える
+	/// </summary>
+	public void AllMinionAtackFinish()
+	{
+		for (int i = 0; i < 7; i++) {
+			if (_myBattleArea_CardInformation [i].gameObject.transform.FindChild("CharaPrefab").gameObject.activeSelf)
+				_myBattleArea_CardInformation [i].AtackFinish();
+		}
+	}
+
+	/// <summary>
 	/// 自陣のすべての攻撃できるミニオンを攻撃可能状態にする
 	/// </summary>
 	public void AllMinionAtackReflesh()
 	{
 		for (int i = 0; i < 7; i++) {
-			if (_myBattleArea_CardInformation [i].gameObject.activeSelf)
+			if (_myBattleArea_CardInformation [i].gameObject.transform.FindChild("CharaPrefab").gameObject.activeSelf)
 				_myBattleArea_CardInformation [i].AtackReflesh ();
 		}
 	}

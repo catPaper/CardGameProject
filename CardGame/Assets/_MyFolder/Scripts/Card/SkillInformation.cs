@@ -21,11 +21,11 @@ public class SkillInformation : MonoBehaviour {
         JOUST,          // ジャウスト
         STEALTH,        // 隠れ身
         SPELLDAMAGE,    // 呪文ダメージ
-        CHARGE,         // 突撃
+        CHARGE,         // 突撃			**実装完了
         CHOOSEONE,      // 選択
         DEATHRATTLE,    // 断末魔
-        DIVINESHIELD,   // 聖なる盾
-        TAUNT,          // 挑発
+        DIVINESHIELD,   // 聖なる盾		**実装完了
+        TAUNT,          // 挑発			**実装完了
         TRANSFORM,      // 変身
         BATTLECRY,      // 雄叫び
         DISCOVER,       // 発見

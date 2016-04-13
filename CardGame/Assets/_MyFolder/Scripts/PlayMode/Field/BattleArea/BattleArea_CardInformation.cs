@@ -14,21 +14,33 @@ public class BattleArea_CardInformation : MonoBehaviour,CardInterface {
 	private Text _atackPointText;
 	[SerializeField][Header("体力")]
 	private Text _hitPointText;
+	[SerializeField][Header("選択可能かどうか")]
+	private GameObject ActiveImage;
 	[Header("スキルイメージ")]
 	[SerializeField]
 	private Image TauntImage;
 	[SerializeField]
 	private Image DivineSheildImage;
+	[SerializeField]
+	private GameObject WindFurryImage;
 	[SerializeField][Header("どちらの物か")]
 	private GameManager.Who _who;
 
 	private CardInformation _myCardInformation;
 
-	private bool _canAtack;	//攻撃可能状態かどうか
+	private int _atackCounter;		//攻撃回数をカウント
 
 	//キャラを囲うフレーム
 	private Image _charaFrame;
 
+
+	public enum ActiveCharacter
+	{
+		ACTIVE,		//アクティブ状態
+		STAY		//非アクティブ状態
+	}
+
+	private ActiveCharacter _activeCharacter = new ActiveCharacter();
 
 	/// <summary>
 	/// 自分の所有するものか
@@ -47,16 +59,17 @@ public class BattleArea_CardInformation : MonoBehaviour,CardInterface {
 	/// <param name="_targetCardInformation">Target card information.</param>
 	public void SetTheCard(CardInformation _targetCardInformation)
 	{
-	//;
+		_charaFrame.enabled = false;
+
 		_myCardInformation = CardInformation.Instantiate(_targetCardInformation);
 
-		UpdateCardInfo ();
-		_charaPrefab.SetActive (true);
-
 		if(SearchSkill(SkillInformation.SkillType.CHARGE))
-			_canAtack = true;
+			AtackReflesh();
 		else
-			_canAtack = false;
+			AtackFinish();
+
+		UpdateCardInfo();
+		_charaPrefab.SetActive (true);
 
 	}
 
@@ -65,6 +78,11 @@ public class BattleArea_CardInformation : MonoBehaviour,CardInterface {
 	/// </summary>
 	public void UpdateCardInfo()
 	{
+		if(_activeCharacter == ActiveCharacter.ACTIVE){
+			ActiveImage.SetActive(true);
+		}else{
+			ActiveImage.SetActive(false);
+		}
 		_atackPointText.text = _myCardInformation.AtackPoint ().ToString();
 		_hitPointText.text = _myCardInformation.HitPoint ().ToString();
 		_charaImage.sprite = _myCardInformation.PlayImage ();
@@ -79,6 +97,7 @@ public class BattleArea_CardInformation : MonoBehaviour,CardInterface {
 	{
 		TauntImage.enabled = false;
 		DivineSheildImage.enabled = false;
+		WindFurryImage.SetActive(false);
 		//ここにどんどん追加
 	}
 
@@ -92,6 +111,14 @@ public class BattleArea_CardInformation : MonoBehaviour,CardInterface {
 			TauntImage.enabled = true;
 		if (SearchSkill (SkillInformation.SkillType.DIVINESHIELD))
 			DivineSheildImage.enabled = true;
+		if(SearchSkill(SkillInformation.SkillType.MEGAWINDFURY)){
+			if(_atackCounter < 3)
+				WindFurryImage.SetActive(true);
+		}
+		if(SearchSkill(SkillInformation.SkillType.WINDFURY)){
+			if(_atackCounter < 2)
+				WindFurryImage.SetActive(true);
+		}
 		//ここにどんどん追加
 	}
 
@@ -129,7 +156,10 @@ public class BattleArea_CardInformation : MonoBehaviour,CardInterface {
 	public void DeactiveCharaPrefab()
 	{
 		Deactive_AllSkillImage ();
+		_activeCharacter = ActiveCharacter.STAY;
+		ActiveImage.SetActive(false);
 		_charaPrefab.SetActive (false);
+		_charaFrame.enabled =true;
 	}
 
 	void Awake()
@@ -142,7 +172,23 @@ public class BattleArea_CardInformation : MonoBehaviour,CardInterface {
 	/// </summary>
 	public void AtackReflesh()
 	{
-		_canAtack = true;
+		_atackCounter = 0;
+		_activeCharacter = ActiveCharacter.ACTIVE;
+
+		UpdateCardInfo();
+	}
+
+	/// <summary>
+	/// 一回攻撃する
+	/// </summary>
+	public void OneAtack()
+	{
+		_atackCounter++;
+
+		if(!CanAtack())
+			_activeCharacter = ActiveCharacter.STAY;
+
+		UpdateCardInfo();
 	}
 
 	/// <summary>
@@ -150,7 +196,22 @@ public class BattleArea_CardInformation : MonoBehaviour,CardInterface {
 	/// </summary>
 	public void AtackFinish()
 	{
-		_canAtack = false;
+		//メガウィンドフューリー
+		if(_myCardInformation.SearchSkill(SkillInformation.SkillType.MEGAWINDFURY)){
+			_atackCounter = 3;
+			return;
+		}
+		//疾風
+		if(_myCardInformation.SearchSkill(SkillInformation.SkillType.WINDFURY)){
+			_atackCounter = 2;
+			return;
+		}
+		//それいがい
+		_atackCounter = 1;
+
+		_activeCharacter = ActiveCharacter.STAY;
+
+		UpdateCardInfo();
 	}
 
 	/// <summary>
@@ -164,7 +225,7 @@ public class BattleArea_CardInformation : MonoBehaviour,CardInterface {
 
 		//TODO 効果等で攻撃できない場合参照して記述
 
-		return _canAtack;
+		return CanAtack();
 	}
 
 	/// <summary>
@@ -193,5 +254,24 @@ public class BattleArea_CardInformation : MonoBehaviour,CardInterface {
 	public int MyHealth()
 	{
 		return _myCardInformation.HitPoint ();
+	}
+
+
+	/// <summary>
+	/// 攻撃可能回数かどうか
+	/// </summary>
+	/// <returns><c>true</c> if this instance can atack; otherwise, <c>false</c>.</returns>
+	private bool CanAtack()
+	{
+		if(_atackCounter == 0){
+			return true;
+		}else if(_atackCounter == 1){
+			if(_myCardInformation.SearchSkill(SkillInformation.SkillType.WINDFURY)||_myCardInformation.SearchSkill(SkillInformation.SkillType.MEGAWINDFURY))
+				return true;
+			else
+				return false;
+		}else{
+			return false;
+		}
 	}
 }

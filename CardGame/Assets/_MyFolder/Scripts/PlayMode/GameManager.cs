@@ -110,6 +110,12 @@ public class GameManager : MonoBehaviour {
 			break;
 		case Phase.END:
 			//TODO  モンスター等の終了時効果発揮時間
+			if(_turn == Turn.MY)
+			{
+				AtackFinishProcess(_myPlayerInformation);
+			}else{
+				AtackFinishProcess(_enemyPlayerInformation);
+			}
 			ChangeTurn();
 			break;
 		}
@@ -139,7 +145,7 @@ public class GameManager : MonoBehaviour {
 
 		_myMinionInfo.Damage (_enemyMinionInfo.MyAtackPower ());
 		_enemyMinionInfo.Damage (_myMinionInfo.MyAtackPower ());
-		_myMinionInfo.AtackFinish ();
+		_myMinionInfo.OneAtack();
 	}
 
 	/// <summary>
@@ -162,7 +168,16 @@ public class GameManager : MonoBehaviour {
 		}
 
 		enemyHeroManager.Damage(atackMinionInformation.MyAtackPower());
-		atackMinionInformation.AtackFinish ();
+		atackMinionInformation.OneAtack();
+	}
+
+	/// <summary>
+	/// ミニオンの攻撃可能状態を終える
+	/// </summary>
+	/// <param name="_targetInformation">Target information.</param>
+	private void AtackFinishProcess(PlayerInformation _targetInformation)
+	{
+		_targetInformation.AllMinionAtackFinish();
 	}
 
 	/// <summary>

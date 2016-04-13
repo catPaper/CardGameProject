@@ -74,9 +74,19 @@ public class PlayerInformation : MonoBehaviour {
 
 	}
 
+
+
 	public bool SearchSkill(SkillInformation.SkillType _skillName)
 	{
 		return _myBattleAreaManager.SearchSkill (_skillName);
+	}
+
+	/// <summary>
+	/// 自陣のミニオンをすべて攻撃終了状態にする
+	/// </summary>
+	public void AllMinionAtackFinish()
+	{
+		_myBattleAreaManager.AllMinionAtackFinish();
 	}
 
 	/// <summary>
